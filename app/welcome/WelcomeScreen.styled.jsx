@@ -53,7 +53,7 @@ export const WelcomeScreenStyles = StyleSheet.create({
 
   buttonText: {
     fontSize: moderateScale(18),
-    fontWeight: '500',
+    fontWeight: theme.fontWeights.medium,
   },
 
   signupButton: {

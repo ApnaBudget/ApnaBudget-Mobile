@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import WelcomeScreen from './welcome/WelcomeScreen'
 import DashboardScreen from './dashboard/index'
 import { SplashScreen } from 'expo-router'
+import LoginScreen from './login'
 
 const index = () => {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -23,7 +24,7 @@ const index = () => {
   }
 
   if(isNewUser) {
-    return <WelcomeScreen onLayout={onLayoutRootView} />
+    return <LoginScreen onLayout={onLayoutRootView} />
   } else {
     return <DashboardScreen onLayout={onLayoutRootView} />
   }

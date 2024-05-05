@@ -17,6 +17,14 @@ export const theme = {
 
     width,
     height,
+
+    fonts: {
+        regular: 'Inter',
+        light: 'Inter-Light',
+        medium: 'Inter-Medium',
+        semibold: 'Inter-SemiBold',
+        bold: 'Inter-Bold',
+    },
 }
 
 export const createRgba = (hex, opacity) => {

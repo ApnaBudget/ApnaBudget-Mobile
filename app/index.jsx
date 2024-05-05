@@ -1,11 +1,12 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ImagesAssets } from '@/constants/ImageAssets'
 
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters'
+import { verticalScale, moderateScale } from 'react-native-size-matters'
 import { theme, createRgba } from "../constants/theme"
+import Button from '@/components/common/Button'
 
 const WelcomeScreen = ({ onLayout }) => {
   const router = useRouter()
@@ -21,14 +22,9 @@ const WelcomeScreen = ({ onLayout }) => {
       <Text style={styles.heading}>Know where your{"\n"}money goes</Text>
       <Text style={styles.subheading}>Track your transaction easily, with{"\n"}categories and financial report.</Text>
 
-      <View style={styles.buttonWrapper}>
-        <Pressable onPress={() => router.push('signup')} style={[styles.signupButton, styles.button]}>
-          <Text style={[styles.signupButtonText, styles.buttonText]}>Signup</Text>
-        </Pressable>
-        
-        <Pressable onPress={() => router.push('login')} style={[styles.loginButton, styles.button]}>
-          <Text style={[styles.loginButtonText, styles.buttonText]}>Login</Text>
-        </Pressable>
+      <View style={styles.buttonsWrapper}>
+        <Button onPress={() => router.push('signup')} customButton={styles.signupButton} customButtonText={styles.signupButtonText} placeholder={'Signup'} />
+        <Button onPress={() => router.push('login')} customButton={styles.loginButton} customButtonText={styles.loginButtonText} placeholder={'Login'} />
       </View>
     </SafeAreaView>
   )
@@ -67,28 +63,13 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(12),
   },
 
-  buttonWrapper: {
+  buttonsWrapper: {
+    width: '100%',
     position: 'absolute',
     bottom: verticalScale(50),
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-  },
-
-  button: {
-    width: '85%',
-    paddingHorizontal: scale(10),
-    paddingVertical: verticalScale(16),
-    borderRadius: 8,
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: verticalScale(15),
-  },
-
-  buttonText: {
-    fontSize: moderateScale(18),
-    fontWeight: 500,
   },
 
   signupButton: {

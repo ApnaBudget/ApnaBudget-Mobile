@@ -19,12 +19,12 @@ const SignupScreen = () => {
   const handleOnSignup = () => {
     if(!username) {
       sendToast("Please enter your username")
+    } else if(!email) {
+      sendToast("Please enter your email")
     } else if(!password) {
       sendToast("Please enter your password")
-    } else if(username !== "admin" || password !== "admin@123") {
-      sendToast("Invalid username or password!")
     } else {
-      router.push('(tabs)')
+      router.push('otp')
     }
   }
 

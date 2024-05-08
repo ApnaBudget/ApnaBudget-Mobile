@@ -3,7 +3,7 @@ import React from 'react'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ImagesAssets } from '@/constants/ImageAssets'
-
+import globalStyle from "../constants/globalStyle";
 import { verticalScale, moderateScale } from 'react-native-size-matters'
 import { theme, createRgba } from "../constants/theme"
 import Button from '@/components/common/Button'
@@ -12,7 +12,7 @@ const WelcomeScreen = ({ onLayout }) => {
   const router = useRouter()
 
   return (
-    <SafeAreaView onLayout={onLayout} style={styles.container}>
+    <SafeAreaView onLayout={onLayout} style={globalStyle.container}>
       <Image
         style={styles.backgroundImage}
         source={ImagesAssets.welcomeBackground}
@@ -33,15 +33,9 @@ const WelcomeScreen = ({ onLayout }) => {
 export default WelcomeScreen
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.white,
-  },
 
   backgroundImage: {
-    width: '90%',
+    width: '100%',
     height: verticalScale(300),
     position: 'absolute',
     top: verticalScale(50),
@@ -64,26 +58,17 @@ const styles = StyleSheet.create({
   },
 
   buttonsWrapper: {
-    width: '100%',
-    position: 'absolute',
-    bottom: verticalScale(50),
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderWidth:2,
+   display:'flex',
+   flexDirection:'column',
+   position:'absolute',
+   bottom:20,
+   alignSelf:'center',
+   width:'100%',
   },
-
-  signupButton: {
-    backgroundColor: theme.colors.primaryColor,
-  },
-
   signupButtonText: {
     color: theme.colors.white,
   },
-
-  loginButton: {
-    backgroundColor: createRgba(theme.colors.primaryColor, 0.2),
-  },
-
   loginButtonText: {
     color: theme.colors.primaryColor,
   },

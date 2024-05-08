@@ -1,7 +1,7 @@
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { ImagesAssets } from "@/constants/ImageAssets";
 import React, { useState } from "react";
-import { theme } from '@/constants/theme'
+import { theme } from '@/constants/theme';
 import { useRouter } from "expo-router";
 import AuthInputBox from "@/components/Auth/AuthInputBox";
 import AuthToolbar from "@/components/Auth/AuthToolbar";

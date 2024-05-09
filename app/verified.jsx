@@ -1,34 +1,25 @@
-import React, { useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
 import Button from "@/components/common/Button";
 import { ImagesAssets } from "@/constants/ImageAssets";
-import { moderateScale, verticalScale } from "react-native-size-matters";
-import { theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
+import globalStyle from "../constants/globalStyle";
 
 const VerfiedScreen = () => {
   const router = useRouter();
-
-  const handleExplore = () => {
-    
-  };
-
+  const handleExplore = () => {};
 
   return (
-    <View style={styles.container}>
-      {/* Image */}
+    <View style={[globalStyle.container, styles.contain]}>
       <Image
         source={ImagesAssets.verified}
         style={styles.image}
         resizeMode="contain"
       />
-      {/* Title */}
-      <Text style={styles.title}>Verified Successfully !</Text>
-      {/* Subtitle */}
-      <Text style={styles.subtitle}>
+      <Text style={globalStyle.mainHeading}>Verified Successfully !</Text>
+      <Text style={globalStyle.subHeading}>
         Congratulations! Your account has been verified successfully.
       </Text>
-      {/* Explore Button */}
       <Button
         onPress={handleExplore}
         customButton={styles.loginButton}
@@ -40,36 +31,14 @@ const VerfiedScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
+  contain: {
     alignItems: "center",
-    backgroundColor: "#ffff",
-    paddingHorizontal: 20,
+    justifyContent: "center",
   },
   image: {
     width: "100%",
     height: 200,
     marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  loginButton: {
-    width: "100%",
-    marginTop: moderateScale(24),
-    backgroundColor: theme.colors.primaryColor,
-  },
-
-  loginButtonText: {
-    color: theme.colors.white,
   },
 });
 

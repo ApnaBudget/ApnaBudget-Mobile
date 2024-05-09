@@ -1,36 +1,37 @@
 import React, { useState } from "react";
 import Button from "@/components/common/Button";
 import { ImagesAssets } from "@/constants/ImageAssets";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { moderateScale, verticalScale } from "react-native-size-matters";
-import { theme } from "@/constants/theme";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
+import globalStyle from "../constants/globalStyle";
+import { useRouter } from "expo-router";
 
 const ForgetPasswordScreen = () => {
+  const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionPress = (option) => {
     setSelectedOption(option);
   };
   const handleVerify = () => {
-    // Logic to resend OTP
+    router.push("confirmPassword");
   };
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyle.container}>
       <AuthToolbar />
-      <Text style={styles.heading}>Forgot Password</Text>
-      <Text style={styles.subHeading}>
+      <Text style={globalStyle.mainHeading}>Forgot Password</Text>
+      <Text style={globalStyle.subHeading}>
         Select which method should we use to reset your password. Make sure the
         data is correct to minimize process errors.
       </Text>
       <Image source={ImagesAssets.reset} style={styles.image} />
-      <TouchableOpacity
+      <Pressable
         style={[
           styles.optionContainer,
-          selectedOption === 'sms' && styles.selectedOption,
+          selectedOption === "sms" && styles.selectedOption,
         ]}
-        onPress={() => handleOptionPress('sms')}
+        onPress={() => handleOptionPress("sms")}
       >
         <View style={styles.iconContainer}>
           <Image source={ImagesAssets.msg} style={styles.icon} />
@@ -39,13 +40,13 @@ const ForgetPasswordScreen = () => {
           <Text style={styles.optionHeading}>Email To</Text>
           <Text style={styles.optionDetail}>email@example.com</Text>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </Pressable>
+      <Pressable
         style={[
           styles.optionContainer,
-          selectedOption === 'email' && styles.selectedOption,
+          selectedOption === "email" && styles.selectedOption,
         ]}
-        onPress={() => handleOptionPress('email')}
+        onPress={() => handleOptionPress("email")}
       >
         <View style={styles.iconContainer}>
           <Image source={ImagesAssets.mail} style={styles.icon} />
@@ -54,7 +55,7 @@ const ForgetPasswordScreen = () => {
           <Text style={styles.optionHeading}>SMS To</Text>
           <Text style={styles.optionDetail}>123-456-7890</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
       <Button
         onPress={handleVerify}
         customButton={styles.loginButton}
@@ -66,34 +67,6 @@ const ForgetPasswordScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 50,
-    paddingHorizontal: 20,
-    backgroundColor: "white",
-  },
-  loginButton: {
-    width: "100%",
-    marginTop: moderateScale(24),
-    backgroundColor: theme.colors.primaryColor,
-  },
-
-  loginButtonText: {
-    color: theme.colors.white,
-  },
-  heading: {
-    textAlign: "center",
-    fontSize: 32,
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  subHeading: {
-    fontSize: 16,
-    textAlign: "center",
-    marginTop: 10,
-    marginBottom: 20,
-    color:'grey'
-  },
   image: {
     alignSelf: "center",
     width: 200,

@@ -1,13 +1,7 @@
 import React, { useState, useRef } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import Button from "@/components/common/Button";
-import { moderateScale, verticalScale } from "react-native-size-matters";
+import { moderateScale } from "react-native-size-matters";
 import { theme } from "@/constants/theme";
 import globalStyle from "../constants/globalStyle";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
@@ -24,17 +18,15 @@ const OtpScreen = () => {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Move focus to next box if character entered
     if (value && index < 3) {
       refs[index + 1].current.focus();
-    }
-    // Move focus to previous box if current box is empty
-    else if (!value && index > 0) {
+    } else if (!value && index > 0) {
       refs[index - 1].current.focus();
     }
   };
+
   const handleResendOtp = () => {
-    // Logic to resend OTP
+    router.push("verified");
   };
 
   const handleVerifyOtp = () => {
@@ -81,10 +73,10 @@ const OtpScreen = () => {
         ))}
       </View>
 
-      <TouchableOpacity onPress={handleResendOtp} style={styles.resendButton}>
+      <Pressable onPress={handleResendOtp} style={styles.resendButton}>
         <Text>If you didn't recieved a OTP ? </Text>
         <Text style={styles.resendText}>Resend OTP</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <Button onPress={handleVerifyOtp} placeholder={"Verify"} />
     </View>

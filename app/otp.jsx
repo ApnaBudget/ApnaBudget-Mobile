@@ -1,119 +1,128 @@
-import React, { useState, useRef } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Pressable, ScrollView, KeyboardAvoidingView } from "react-native";
 import Button from "@/components/common/Button";
-import { moderateScale } from "react-native-size-matters";
 import { theme } from "@/constants/theme";
-import globalStyle from "../constants/globalStyle";
+import GlobalStyle from "../constants/GlobalStyle";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
+import { hpToDP, wpToDP } from "../utils/ResponsiveScreen";
+import { OtpInput } from "react-native-otp-entry";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { sendToast } from "@/utils/SendToast";
 
 const OtpScreen = () => {
-  const router = useRouter();
-  const [otp, setOtp] = useState(["", "", "", ""]);
-  const [focusedIndex, setFocusedIndex] = useState(null);
-  const refs = [useRef(), useRef(), useRef(), useRef()];
+  const handleResendOtp = () => {
+    
+  };
 
-  const handleOtpChange = (value, index) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    if (value && index < 3) {
-      refs[index + 1].current.focus();
-    } else if (!value && index > 0) {
-      refs[index - 1].current.focus();
+  const handleVerifyOtp = (otp) => {
+    // Logic to verify OTP
+    if(otp == 123456) {
+      router.replace("verified");
+    } else {
+      sendToast("OTP is not valid!");
     }
   };
 
-  const handleResendOtp = () => {
-    router.push("verified");
-  };
-
-  const handleVerifyOtp = () => {
-    // Logic to verify OTP
-    router.replace("verified");
-  };
-
-  const handleFocus = (index) => {
-    setFocusedIndex(index);
-  };
-
-  const handleBlur = () => {
-    setFocusedIndex(null);
-  };
-
   return (
-    <View style={globalStyle.container}>
-      <AuthToolbar />
+    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.black}}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}} bounces={false}>
+          <View style={GlobalStyle.container}>
+            <StatusBar style="light" />
+            <AuthToolbar isDark={true} />
 
-      <Text style={globalStyle.mainHeading}>You’re almost there!</Text>
-      <Text style={globalStyle.subHeading}>
-        You only have to enter an OTP code we sent via Email to your registered
-        email hub@academy.com
-      </Text>
+            <Text style={styles.heading}>
+              You're almost there!
+            </Text>
 
-      <Text style={styles.otpHeading}>OTP verification code</Text>
+            <Text style={styles.subHeading}>
+              You only have to enter an OTP code we sent to your registered email{" "}
+              <Text style={[styles.subHeading, styles.emailText]}>tangobee@gmail.com</Text>
+            </Text>
 
-      <View style={styles.otpContainer}>
-        {otp.map((value, index) => (
-          <TextInput
-            key={index}
-            ref={refs[index]}
-            style={[
-              styles.otpInput,
-              focusedIndex === index && styles.otpInputFocused,
-            ]}
-            maxLength={1}
-            keyboardType="numeric"
-            onChangeText={(value) => handleOtpChange(value, index)}
-            onFocus={() => handleFocus(index)}
-            onBlur={handleBlur}
-            value={value}
-          />
-        ))}
-      </View>
+            <View style={styles.otpFormWrapper}>
+              <Text style={styles.otpHeading}>OTP verification code</Text>
 
-      <Pressable onPress={handleResendOtp} style={styles.resendButton}>
-        <Text>If you didn't recieved a OTP ? </Text>
-        <Text style={styles.resendText}>Resend OTP</Text>
-      </Pressable>
+              <OtpInput
+                numberOfDigits={6}
+                focusColor={theme.colors.primaryColor}
+                focusStickBlinkingDuration={500}
+                onFilled={(otp) => handleVerifyOtp(otp)}
+              />
 
-      <Button onPress={handleVerifyOtp} placeholder={"Verify"} />
-    </View>
+              <View style={styles.resendOTPWrapper}>
+                <Text style={styles.resendOTPText}>
+                  If you didn't recieved a OTP?{" "}
+                </Text>
+
+                <Pressable onPress={handleResendOtp}>
+                  <Text style={styles.resendOTPLink}>
+                    Resend OTP
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            <Button customButtonStyle={styles.verifyButton} onPress={handleVerifyOtp} placeholder={"Verify"} />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  heading: {
+    fontFamily: 'bold',
+    alignSelf:'center',
+    fontSize: wpToDP(8),
+    color: theme.colors.black,
+    alignSelf: 'flex-start',
+    marginTop: hpToDP(12),
+  },
+
+  subHeading: {
+    fontSize: wpToDP(4),
+    color: theme.colors.lightBlack,
+    alignSelf:'flex-start',
+    textAlign: 'left',
+    fontFamily: 'medium',
+    marginTop: hpToDP(1.25),
+  },
+
+  emailText: {
+    fontFamily: 'semibold'
+  },
+
+  otpFormWrapper: {
+    alignItems: 'center',
+    marginVertical: hpToDP(20),
+    gap: hpToDP(2.5)
+  },
+
   otpHeading: {
-    textAlign: "center",
-    fontSize: 18,
-    marginBottom: 10,
+    fontFamily: 'regular',
+    fontSize: wpToDP(4.5),
   },
-  otpContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
+
+  resendOTPWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  otpInputFocused: {
-    backgroundColor: "#FFF3E5",
+
+  resendOTPText: {
+    fontSize: wpToDP(4),
+    color: theme.colors.black,
+    fontFamily: 'regular',
   },
-  otpInput: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "gray",
-    textAlign: "center",
-    fontSize: 18,
-  },
-  resendButton: {
-    alignSelf: "center",
-    flexDirection: "row",
-    marginBottom: 20,
-  },
-  resendText: {
-    fontSize: moderateScale(14),
+
+  resendOTPLink: {
     color: theme.colors.primaryColor,
+    fontFamily: 'semibold',
+    fontSize: wpToDP(4.5)
   },
 });
 

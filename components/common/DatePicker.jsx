@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { theme } from '@/constants/theme'
-import { moderateScale } from 'react-native-size-matters'
+import { hpToDP, wpToDP } from '../../utils/ResponsiveScreen'
 
 const DatePicker = () => {
   return (
@@ -33,16 +33,16 @@ const styles = StyleSheet.create({
   dateWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: moderateScale(8),
+    gap: wpToDP(3),
     backgroundColor: theme.colors.neutral(0.1),
     borderRadius: 20,
-    paddingVertical: moderateScale(8),
-    paddingHorizontal: moderateScale(12),
+    paddingVertical: hpToDP(1.2),
+    paddingHorizontal: wpToDP(3),
   },
 
   date: {
     color: theme.colors.lightBlack,
-    fontFamily: 'Inter-Medium',
-    fontSize: moderateScale(12),
+    fontFamily: 'medium',
+    fontSize: wpToDP(3.5),
   },
 })

@@ -2,7 +2,7 @@ import { StyleSheet, TextInput, View } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { theme } from '@/constants/theme'
-import { moderateScale } from 'react-native-size-matters'
+import { hpToDP, wpToDP } from '../../utils/ResponsiveScreen'
 
 const AuthInputBox = ( {  value, setValue, isPassword, iconName, inputPlaceholder } ) => {
   return (
@@ -28,23 +28,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingHorizontal: moderateScale(10),
-        paddingVertical: moderateScale(8),
+        paddingStart: wpToDP(12),
+        paddingEnd: wpToDP(5),
         borderColor: theme.colors.borderColor,
-        borderWidth: moderateScale(1),
+        borderWidth: 1,
         borderRadius: 8,
         backgroundColor: theme.colors.white,
     },
 
     inputIcon: {
         position: 'absolute',
-        marginStart: moderateScale(10),
+        marginStart: wpToDP(3),
     },
 
     input: {
         width: '100%',
-        paddingLeft: moderateScale(34),
-        fontSize: moderateScale(14),
+        paddingVertical: hpToDP(1.75),
+        fontSize: wpToDP(4.5),
+        fontFamily: 'medium',
         color: theme.colors.black,
     }
 })

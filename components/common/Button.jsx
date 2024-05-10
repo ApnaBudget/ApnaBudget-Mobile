@@ -1,13 +1,13 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { theme } from "@/constants/theme";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { hpToDP, wpToDP } from "../../utils/ResponsiveScreen";
 
-const Button = ({ onPress, placeholder }) => {
+const Button = ({ customButtonStyle, customButtonTextStyle, onPress, placeholder }) => {
   return (
     <View style={styles.container}>
-      <Pressable onPress={onPress} style={styles.button}>
-        <Text style={styles.buttonText}>{placeholder}</Text>
+      <Pressable onPress={onPress} style={[styles.button, customButtonStyle]}>
+        <Text style={[styles.buttonText, customButtonTextStyle]}>{placeholder}</Text>
       </Pressable>
     </View>
   );
@@ -22,18 +22,18 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    paddingHorizontal: scale(10),
-    paddingVertical: verticalScale(12),
+    paddingHorizontal: wpToDP(3),
+    paddingVertical: hpToDP(2),
     borderRadius: 8,
     alignItems: "center",
+    justifyContent: 'center',
     width: "100%",
-    marginTop: moderateScale(15),
     backgroundColor: theme.colors.primaryColor,
   },
 
   buttonText: {
-    fontSize: moderateScale(16),
-    fontWeight: "500",
+    fontSize: wpToDP(4.5),
+    fontFamily: 'bold',
     color: theme.colors.white,
   },
 });

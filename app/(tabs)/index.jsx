@@ -7,7 +7,6 @@ import ExpenseType from "@/components/ExpenseType";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { ImagesAssets } from "@/constants/ImageAssets";
 import { StyleSheet } from "react-native";
-import { moderateScale } from "react-native-size-matters";
 import { theme } from "@/constants/theme";
 
 const DashboardScreen = ({ onLayout }) => {
@@ -73,33 +72,33 @@ export default DashboardScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: moderateScale(16),
-    paddingVertical: moderateScale(10),
+    paddingHorizontal:  (16),
+    paddingVertical:  (10),
     alignItems: "center",
-    gap: moderateScale(25),
+    gap:  (25),
   },
 
   contentContainer: {
     alignItems: "center",
-    gap: moderateScale(15),
+    gap:  (15),
   },
 
   contentWrapper: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: moderateScale(20),
+    padding:  (20),
     borderColor: theme.colors.borderColor,
-    borderWidth: moderateScale(1),
+    borderWidth:  (1),
     borderRadius: 10,
   },
 
   expensesWrapper: {
-    marginTop: moderateScale(10),
+    marginTop:  (10),
   },
 
   graphWrapper: {
-    padding: moderateScale(-10),
+    padding:  (-10),
   },
 
   demoGraph: {
@@ -109,8 +108,8 @@ const styles = StyleSheet.create({
   },
 
   nothingHereError: {
-    fontFamily: "Inter",
-    fontSize: moderateScale(16),
-    marginTop: moderateScale(100),
+    fontFamily: "regular",
+    fontSize:  (16),
+    marginTop:  (100),
   },
 });

@@ -1,118 +1,74 @@
 import React, { useState } from "react";
 import Button from "@/components/common/Button";
 import { ImagesAssets } from "@/constants/ImageAssets";
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import { Text, Image, StyleSheet, KeyboardAvoidingView, ScrollView } from "react-native";
+import AuthInputBox from "@/components/Auth/AuthInputBox";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
-import globalStyle from "../constants/globalStyle";
+import GlobalStyle from "@/constants/GlobalStyle";
+import { theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { hpToDP, wpToDP } from "@/utils/ResponsiveScreen";
 
 const ForgetPasswordScreen = () => {
   const router = useRouter();
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [contactDetail, setContactDetail] = useState();
 
-  const handleOptionPress = (option) => {
-    setSelectedOption(option);
-  };
   const handleVerify = () => {
     router.push("confirmPassword");
   };
 
   return (
-    <View style={globalStyle.container}>
-      <AuthToolbar />
-      <Text style={globalStyle.mainHeading}>Forgot Password</Text>
-      <Text style={globalStyle.subHeading}>
-        Select which method should we use to reset your password. Make sure the
-        data is correct to minimize process errors.
-      </Text>
-      <Image source={ImagesAssets.reset} style={styles.image} />
-      <Pressable
-        style={[
-          styles.optionContainer,
-          selectedOption === "sms" && styles.selectedOption,
-        ]}
-        onPress={() => handleOptionPress("sms")}
-      >
-        <View style={styles.iconContainer}>
-          <Image source={ImagesAssets.msg} style={styles.icon} />
-        </View>
-        <View>
-          <Text style={styles.optionHeading}>Email To</Text>
-          <Text style={styles.optionDetail}>email@example.com</Text>
-        </View>
-      </Pressable>
-      <Pressable
-        style={[
-          styles.optionContainer,
-          selectedOption === "email" && styles.selectedOption,
-        ]}
-        onPress={() => handleOptionPress("email")}
-      >
-        <View style={styles.iconContainer}>
-          <Image source={ImagesAssets.mail} style={styles.icon} />
-        </View>
-        <View>
-          <Text style={styles.optionHeading}>SMS To</Text>
-          <Text style={styles.optionDetail}>123-456-7890</Text>
-        </View>
-      </Pressable>
-      <Button
-        onPress={handleVerify}
-        customButton={styles.loginButton}
-        customButtonText={styles.loginButtonText}
-        placeholder={"Continue"}
-      />
-    </View>
+    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.white}}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}} bounces={false}>
+          <SafeAreaView style={GlobalStyle.container}>
+            <StatusBar style="dark" />
+            <AuthToolbar isDark={true} heading={"Forgot Password"} />
+            
+            <Text style={styles.subHeading}>
+              Select which method should we use to reset your password. Make sure the data is correct to minimize process errors.
+            </Text>
+            
+            <Image source={ImagesAssets.forgotPasswordBackground} style={styles.backgroundImage} />
+            
+            <AuthInputBox
+              value={contactDetail}
+              setValue={setContactDetail}
+              iconName={"mail-outline"}
+              inputPlaceholder={"Email or Phone number"}        
+            />
+            
+            <Button
+              onPress={handleVerify}
+              customButtonStyle={styles.continueButton}
+              placeholder={"Continue"}
+            />
+          </SafeAreaView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  image: {
-    alignSelf: "center",
-    width: 200,
-    height: 200,
+  subHeading: {
+    marginTop: hpToDP(10),
+    color: theme.colors.lightBlack,
+    fontSize: wpToDP(4),
+    fontFamily: 'light'
+  },
+
+  backgroundImage: {
+    width: '100%',
+    height: hpToDP(40),
     resizeMode: "contain",
-    marginBottom: 20,
+    marginVertical: hpToDP(7),
   },
-  optionContainer: {
-    flexDirection: "row",
-    padding: 10,
-    alignItems: "center",
-    marginVertical: 10,
-    borderWidth: 2,
-    borderColor: "#f2f2f2",
-    borderRadius: 10,
-  },
-  selectedOption: {
-    borderColor: '#9E5FE6',
-  },
-  iconContainer: {
-    marginRight: 10,
-  },
-  icon: {
-    height: 35,
-    width: 35,
-  },
-  optionHeading: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "grey",
-  },
-  optionDetail: {
-    fontSize: 16,
-    color: "#888",
-  },
+
   continueButton: {
-    backgroundColor: "#007bff",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  continueButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
+    marginVertical: hpToDP(2),
   },
 });
 

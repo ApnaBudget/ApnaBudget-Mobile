@@ -2,43 +2,69 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import Button from "@/components/common/Button";
 import { ImagesAssets } from "@/constants/ImageAssets";
-import { useRouter } from "expo-router";
-import globalStyle from "../constants/globalStyle";
+import { router } from "expo-router";
+import GlobalStyle from "../constants/GlobalStyle";
+import { theme } from "../constants/theme";
+import { hpToDP, wpToDP } from "@/utils/ResponsiveScreen";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 const VerfiedScreen = () => {
-  const router = useRouter();
-  const handleExplore = () => {};
+  const handleExplore = () => {
+    router.replace("(tabs)");
+  }
 
   return (
-    <View style={[globalStyle.container, styles.contain]}>
+    <SafeAreaView style={[GlobalStyle.container, styles.container]}>
+      <StatusBar style="dark" />
       <Image
-        source={ImagesAssets.verified}
-        style={styles.image}
+        source={ImagesAssets.verifiedScreenBackground}
+        style={styles.backgroundImage}
         resizeMode="contain"
       />
-      <Text style={globalStyle.mainHeading}>Verified Successfully !</Text>
-      <Text style={globalStyle.subHeading}>
-        Congratulations! Your account has been verified successfully.
-      </Text>
+
+      <View style={{gap: hpToDP(1)}}>
+        <Text style={styles.heading}>
+          Verified Successfully 
+        </Text>
+        
+        <Text style={styles.subHeading}>
+          Congratulations! Your account has been verified successfully.
+        </Text>
+      </View>
+      
       <Button
         onPress={handleExplore}
-        customButton={styles.loginButton}
-        customButtonText={styles.loginButtonText}
         placeholder={"Let's Explore"}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  contain: {
-    alignItems: "center",
-    justifyContent: "center",
+  container: {
+    justifyContent: 'space-around',
   },
-  image: {
-    width: "100%",
-    height: 200,
-    marginBottom: 20,
+
+  backgroundImage: {
+    width: '100%',
+    height: hpToDP(40),
+    resizeMode: "contain",
+    marginVertical: hpToDP(8),
+  },
+
+  heading: {
+    color: theme.colors.black,
+    fontSize: wpToDP(8),
+    textAlign: 'center',
+    fontFamily: 'bold'
+  },
+
+  subHeading: {
+    color: theme.colors.lightBlack,
+    fontSize: wpToDP(4),
+    textAlign: 'center',
+    fontFamily: 'light'
   },
 });
 

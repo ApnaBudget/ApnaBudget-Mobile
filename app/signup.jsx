@@ -1,14 +1,16 @@
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet, KeyboardAvoidingView, ScrollView, Linking } from "react-native";
 import { ImagesAssets } from "@/constants/ImageAssets";
 import React, { useState } from "react";
 import { theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
 import AuthInputBox from "@/components/Auth/AuthInputBox";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
-import { moderateScale, verticalScale } from "react-native-size-matters";
 import Button from "@/components/common/Button";
 import { sendToast } from "@/utils/SendToast";
-import globalStyle from "../constants/globalStyle";
+import GlobalStyle from "@/constants/GlobalStyle";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { wpToDP, hpToDP } from "@/utils/ResponsiveScreen";
+import { StatusBar } from "expo-status-bar";
 
 const SignupScreen = () => {
   const router = useRouter();
@@ -29,74 +31,92 @@ const SignupScreen = () => {
   };
 
   return (
-    <View style={globalStyle.container}>
-      <Image
-        source={ImagesAssets.authBackground}
-        style={styles.authBackground}
-      />
+    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.black}}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}} bounces={false}>
+          <View style={GlobalStyle.container}>
+            <StatusBar style="light" />
+            <AuthToolbar />
+            
+            <View style={styles.authBackground}>
+              <Text style={styles.heading}>ApnaBudget</Text>
+            </View>
 
-      <AuthToolbar />
+            <View style={styles.signupFormWrapper}>
+              <Text style={styles.subHeading}>
+                Sign up your Account
+              </Text>
 
-      <Text style={globalStyle.companyHeading}>ApnaBudget</Text>
-      <Text style={[globalStyle.darkSubHeading, styles.subHeading]}>
-        Sign up your Account
-      </Text>
+              <AuthInputBox
+                value={username}
+                setValue={setUsername}
+                iconName={"person-outline"}
+                inputPlaceholder={"Username"}
+              />
 
-      <View style={styles.SignupFormWrapper}>
-        <AuthInputBox
-          value={username}
-          setValue={setUsername}
-          iconName={"person-outline"}
-          inputPlaceholder={"Username"}
-        />
-        <AuthInputBox
-          value={email}
-          setValue={setEmail}
-          iconName={"mail-outline"}
-          inputPlaceholder={"Email"}
-        />
-        <AuthInputBox
-          value={password}
-          setValue={setPassword}
-          isPassword={true}
-          iconName={"lock-closed-outline"}
-          inputPlaceholder={"Password"}
-        />
+              <AuthInputBox
+                value={email}
+                setValue={setEmail}
+                iconName={"mail-outline"}
+                inputPlaceholder={"Email"}
+              />
 
-        <Pressable style={styles.termConditionWrapper}>
-          <Text style={styles.termConditionText}>
-            I agree to the Terms and Conditions
-          </Text>
-        </Pressable>
-      </View>
+              <AuthInputBox
+                value={password}
+                setValue={setPassword}
+                isPassword={true}
+                iconName={"lock-closed-outline"}
+                inputPlaceholder={"Password"}
+              />
 
-      <Button
-        onPress={handleOnSignup}
-        customButton={styles.SignupButton}
-        customButtonText={styles.SignupButtonText}
-        placeholder={"Sign up"}
-      />
+              <View style={styles.termConditionWrapper}>
+                <Text style={styles.termConditionText}>
+                  I agree to the{" "}
+                </Text>
 
-      <View style={styles.authButtonsContainer}>
-        <Pressable style={[styles.authButton, styles.googleAuthButton]}>
-          <Image
-            resizeMode="contain"
-            source={ImagesAssets.googleLogo}
-            style={styles.authIcons}
-          />
-          <Text style={styles.authButtonText}>Google SignUp</Text>
-        </Pressable>
+                <Pressable onPress={() => Linking.openURL('https://apnabudget.com/terms-and-conditions')}>
+                  <Text style={styles.termConditionLink}>
+                    Terms and Conditions
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
 
-        <Pressable style={styles.authButton}>
-          <Image
-            resizeMode="contain"
-            source={ImagesAssets.appleLogo}
-            style={styles.authIcons}
-          />
-          <Text style={styles.authButtonText}>Apple SignUp</Text>
-        </Pressable>
-      </View>
-    </View>
+            <Button
+              onPress={handleOnSignup}
+              customButtonStyle={styles.signupButton}
+              placeholder={"Sign up"}
+            />
+
+            <View style={styles.authSeparator}>
+              <View style={styles.authSeparatorLine} />
+              <View>
+                <Text style={styles.authSeparatorText}>OR</Text>
+              </View>
+              <View style={styles.authSeparatorLine} />
+            </View>
+
+            <View style={styles.authButtonsContainer}>
+              <Pressable style={[styles.authButton, styles.googleAuthButton]}>
+                <Image
+                  resizeMode="contain"
+                  source={ImagesAssets.googleLogo}
+                  style={styles.authIcons}
+                />
+              </Pressable>
+
+              <Pressable style={styles.authButton}>
+                <Image
+                  resizeMode="contain"
+                  source={ImagesAssets.appleLogo}
+                  style={styles.authIcons}
+                />
+              </Pressable>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -105,57 +125,106 @@ export default SignupScreen;
 const styles = StyleSheet.create({
   authBackground: {
     position: "absolute",
-    left: 0,
-    top: -5,
+    top: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
     width: theme.width,
-    height: theme.height,
+    height: hpToDP(28),
+    backgroundColor: theme.colors.primaryColor,
+    borderBottomStartRadius: 50,
+    borderBottomEndRadius: 50,
   },
-  SignupFormWrapper: {
-    width: "100%",
-    marginTop: moderateScale(24),
-    gap: moderateScale(12),
+
+  heading: {
+    fontFamily: 'bold',
+    alignSelf:'center',
+    fontSize: wpToDP(11.5),
+    color: theme.colors.white,
+    marginTop: hpToDP(7),
   },
+
   subHeading: {
-    marginTop: moderateScale(80),
+    fontSize: wpToDP(5),
+    color: theme.colors.black,
+    alignSelf:'center',
+    fontFamily: 'medium',
+    marginBottom: hpToDP(2),
   },
+
+  signupFormWrapper: {
+    width: "100%",
+    gap: hpToDP(1.75),
+    marginTop: hpToDP(32),
+  },
+
   termConditionWrapper: {
     alignSelf: "flex-start",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
+
   termConditionText: {
-    fontSize: moderateScale(14),
-    color: theme.colors.primaryColor,
+    fontSize: wpToDP(3.5),
+    color: theme.colors.black,
+    fontFamily: 'regular',
   },
+
+  termConditionLink: {
+    color: theme.colors.primaryColor,
+    fontFamily: 'semibold',
+    fontSize: wpToDP(3.5)
+  },
+
+  signupButton: {
+    marginTop: hpToDP(2.5),
+  },
+
+  authSeparator: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: hpToDP(5),
+  },
+
+  authSeparatorLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: theme.colors.gray,
+  },
+
+  authSeparatorText: {
+    width: wpToDP(10),
+    textAlign: 'center',
+    fontFamily: 'light',
+    color: theme.colors.lightblack,
+  },
+
   authButtonsContainer: {
     width: "100%",
-    display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
-    marginTop: moderateScale(20),
+    gap: wpToDP(2),
+    marginBottom: hpToDP(2),
   },
 
   authButton: {
-    flex:1,
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: verticalScale(8),
-    marginTop: verticalScale(15),
+    paddingVertical: hpToDP(1.4),
     borderColor: theme.colors.borderColor,
-    borderWidth: moderateScale(1),
+    borderWidth: 1,
     borderRadius: 8,
     backgroundColor: theme.colors.white,
-  },
-
-  authButtonText: {
-    fontSize: moderateScale(13),
-    fontFamily: theme.fonts.regular,
+    gap: wpToDP(1.3),
   },
 
   authIcons: {
-    width: moderateScale(28),
-    height: moderateScale(28),
-    marginHorizontal: moderateScale(10),
+    width: wpToDP(8),
+    height: wpToDP(8),
   },
 });

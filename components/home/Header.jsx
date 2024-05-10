@@ -1,9 +1,9 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Feather } from '@expo/vector-icons';
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { ImagesAssets } from '@/constants/ImageAssets'
 import { theme } from '@/constants/theme'
+import { hpToDP, wpToDP } from '../../utils/ResponsiveScreen';
 
 const Header = () => {
   return (
@@ -18,7 +18,7 @@ const Header = () => {
       </View>
 
       <View style={styles.profileWrapper}>
-        <Feather name="search" size={moderateScale(26)} color={theme.colors.iconColor} />
+        <Feather name="search" size={wpToDP(8)} color={theme.colors.iconColor} />
 
         <View style={styles.userPfp}>
           <Text>M</Text>
@@ -41,29 +41,29 @@ const styles = StyleSheet.create({
   appBranding: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: moderateScale(10),
+    gap: wpToDP(3),
   },
 
   logoWrapper: {
-    width: scale(32),
-    height: verticalScale(32)
+    width: wpToDP(9),
+    height: hpToDP(5)
   },
 
   appName: {
-    fontSize: moderateScale(14),
+    fontSize: wpToDP(4),
     color: theme.colors.black,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'semibold',
   },
 
   profileWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: moderateScale(10),
+    gap: wpToDP(4),
   },
 
   userPfp: {
-    width: scale(32),
-    height: verticalScale(32),
+    width: wpToDP(9),
+    height: hpToDP(4.5),
     backgroundColor: theme.colors.neutral(0.1),
     borderRadius: 50,
     justifyContent: 'center',

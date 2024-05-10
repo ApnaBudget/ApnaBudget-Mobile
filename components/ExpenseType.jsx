@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { moderateScale } from 'react-native-size-matters'
+import { wpToDP } from '../utils/ResponsiveScreen'
 
 const ExpenseType = ({ icon, value, type }) => {
   const expenseColor = ["#E53935", "#00897B", "#212121"]
@@ -30,7 +30,7 @@ const styles = ( expenseColor ) => StyleSheet.create({
     container: {
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: moderateScale(6),
+        gap: wpToDP(1.75),
     },
 
     contentWrapper: {
@@ -39,10 +39,10 @@ const styles = ( expenseColor ) => StyleSheet.create({
 
     expenseDetail: {
         color: expenseColor,
-        fontFamily: 'Inter-Medium'
+        fontFamily: 'medium'
     },
 
     description: {
-        fontFamily: 'Inter'
+        fontFamily: 'regular'
     },
 })

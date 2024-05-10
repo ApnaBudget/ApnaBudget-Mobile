@@ -8,11 +8,11 @@ SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   const [loaded, error] = useFonts({
-    Inter: require("../assets/fonts/Inter-Regular.ttf"),
-    "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
-    "Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
-    "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
-    "Inter-Light": require("../assets/fonts/Inter-Light.ttf"),
+    "regular": require("../assets/fonts/Urbanist-Regular.ttf"),
+    "medium": require("../assets/fonts/Urbanist-Medium.ttf"),
+    "semibold": require("../assets/fonts/Urbanist-SemiBold.ttf"),
+    "bold": require("../assets/fonts/Urbanist-Bold.ttf"),
+    "light": require("../assets/fonts/Urbanist-Light.ttf"),
     ...FontAwesome.font,
   });
 
@@ -35,15 +35,15 @@ const RootLayout = () => {
 
 const RootLayoutNav = () => {
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="login" options={{ headerShown: false }} />
-      <Stack.Screen name="forgetPassword" options={{ headerShown: false }} />
-      <Stack.Screen name="confirmPassword" options={{ headerShown: false }} />
-      <Stack.Screen name="signup" options={{ headerShown: false }} />
-      <Stack.Screen name="otp" options={{ headerShown: false }} />
-      <Stack.Screen name="verified" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="login" options={{animationTypeForReplace: 'push', animation:'ios'}} />
+      <Stack.Screen name="forgetPassword" options={{animationTypeForReplace: 'push', animation:'fade'}} />
+      <Stack.Screen name="confirmPassword" options={{animationTypeForReplace: 'push', animation:'fade'}} />
+      <Stack.Screen name="signup" options={{animationTypeForReplace: 'push', animation:'ios'}} />
+      <Stack.Screen name="otp" options={{animationTypeForReplace: 'push', animation:'fade'}} />
+      <Stack.Screen name="verified" options={{animationTypeForReplace: 'push', animation:'fade'}} />
+      <Stack.Screen name="(tabs)" options={{animationTypeForReplace: 'push', animation:'fade'}} />
     </Stack>
   );
 };

@@ -1,95 +1,89 @@
 import React, { useState } from "react";
-import {
-  View,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
 import Button from "@/components/common/Button";
 import { ImagesAssets } from "@/constants/ImageAssets";
-import { theme } from "@/constants/theme";
+import { Text, Image, StyleSheet, KeyboardAvoidingView, ScrollView, View } from "react-native";
+import AuthInputBox from "@/components/Auth/AuthInputBox";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
-import { moderateScale } from "react-native-size-matters";
-import globalStyle from "../constants/globalStyle";
+import GlobalStyle from "@/constants/GlobalStyle";
+import { theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { hpToDP, wpToDP } from "@/utils/ResponsiveScreen";
 
-const CreateNewPasswordScreen = () => {
+const ConfirmPasswordScreen = () => {
   const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
 
-  const handlePasswordChange = (text) => {
-    setPassword(text);
-  };
-
-  const handleConfirmPasswordChange = (text) => {
-    setConfirmPassword(text);
-  };
   const handleVerify = () => {
-    router.push("otp");
   };
+
   return (
-    <View style={globalStyle.container}>
-      <AuthToolbar />
-      <Text style={globalStyle.mainHeading}>Create New Password</Text>
-      <Image source={ImagesAssets.reset} style={styles.image} />
-      <View style={styles.inputContainer}>
-        <Icon name="lock-closed" size={24} color="#000" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={handlePasswordChange}
-        />
-        <Icon name="eye-off" size={24} color="#000" style={styles.icon} />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Icon name="lock-closed" size={24} color="#000" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
-          secureTextEntry
-          value={confirmPassword}
-          onChangeText={handleConfirmPasswordChange}
-        />
-        <Icon name="eye-off" size={24} color="#000" style={styles.icon} />
-      </View>
-
-      <Button onPress={handleVerify} placeholder={"Continue"} />
-    </View>
+    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.white}}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}} bounces={false}>
+          <SafeAreaView style={GlobalStyle.container}>
+            <StatusBar style="dark" />
+            <AuthToolbar isDark={true} heading={"Create New Password"} />
+            
+            <Image source={ImagesAssets.confirmPasswordBackground} style={styles.backgroundImage} />
+            
+            <Text style={styles.subHeading}>
+              Time to create your new password!
+            </Text>
+            
+            <View style={styles.inputsContainer}>
+              <AuthInputBox
+                value={password}
+                setValue={setPassword}
+                iconName={"lock-closed-outline"}
+                inputPlaceholder={"Password"}        
+              />
+              
+              <AuthInputBox
+                value={confirmPassword}
+                setValue={setConfirmPassword}
+                iconName={"lock-closed-outline"}
+                inputPlaceholder={"Confirm Password"}        
+              />
+            </View>
+            
+            <Button
+              onPress={handleVerify}
+              customButtonStyle={styles.continueButton}
+              placeholder={"Continue"}
+            />
+          </SafeAreaView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
+export default ConfirmPasswordScreen
+
 const styles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: "#f2f2f2",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-  },
-  image: {
-    alignSelf: "center",
-    width: 200,
-    height: 200,
+  backgroundImage: {
+    width: '100%',
+    height: hpToDP(40),
     resizeMode: "contain",
-    marginBottom: 20,
+    marginVertical: hpToDP(8),
   },
-  icon: {
-    color: "grey",
-    marginRight: 10,
+
+  subHeading: {
+    alignSelf: 'flex-start',
+    marginBottom: hpToDP(3),
+    color: theme.colors.lightblack,
+    fontSize: wpToDP(4),
+    fontFamily: 'light'
   },
-  input: {
-    flex: 1,
-    padding: 10,
+
+  inputsContainer: {
+    gap: hpToDP(1.5),
+  },
+
+  continueButton: {
+    marginVertical: hpToDP(3),
   },
 });
-
-export default CreateNewPasswordScreen;

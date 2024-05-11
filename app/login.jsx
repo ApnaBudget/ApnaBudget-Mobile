@@ -54,8 +54,8 @@ const LoginScreen = () => {
               <AuthInputBox
                 value={username}
                 setValue={setUsername}
-                iconName={"person-outline"}
-                inputPlaceholder={"Username"}
+                iconName={"mail-outline"}
+                inputPlaceholder={"Email or Phone number"}
               />
 
               <AuthInputBox

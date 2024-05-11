@@ -58,7 +58,7 @@ const SignupScreen = () => {
                 value={email}
                 setValue={setEmail}
                 iconName={"mail-outline"}
-                inputPlaceholder={"Email"}
+                inputPlaceholder={"Email or Phone number"}
               />
 
               <AuthInputBox

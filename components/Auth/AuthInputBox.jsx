@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { theme } from '@/constants/theme'
 import { hpToDP, wpToDP } from '../../utils/ResponsiveScreen'
 
-const AuthInputBox = ( {  value, setValue, isPassword, iconName, inputPlaceholder } ) => {
+const AuthInputBox = ( {  value, setValue, isPassword, iconName, inputPlaceholder , onBlurEffect } ) => {
   return (
     <View style={styles.inputWrapper}>
         <Ionicons name={iconName} style={styles.inputIcon} size={24} color={theme.colors.iconColor}/>
@@ -15,6 +15,7 @@ const AuthInputBox = ( {  value, setValue, isPassword, iconName, inputPlaceholde
             onChangeText={(text) => {setValue(text)}}
             secureTextEntry={isPassword}
             placeholder={inputPlaceholder}
+            onBlur = {onBlurEffect}
         />
     </View>
   )

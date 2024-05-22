@@ -1,65 +1,124 @@
-import { View, Text, Image, Pressable, StyleSheet, KeyboardAvoidingView, ScrollView, Linking } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Linking,
+} from "react-native";
 import { ImagesAssets } from "@/constants/ImageAssets";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
 import AuthInputBox from "@/components/Auth/AuthInputBox";
+import { Ionicons } from "@expo/vector-icons";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
 import Button from "@/components/common/Button";
-import { sendToast } from "@/utils/SendToast";
 import GlobalStyle from "@/constants/GlobalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { wpToDP, hpToDP } from "@/utils/ResponsiveScreen";
 import { StatusBar } from "expo-status-bar";
+import { signUpEmail } from "../utils/AuthHelper";
+import {
+  isValidEmail,
+  debounce,
+  isValidPassword,
+  validateUsername,
+} from "../utils/BasicHelpers";
 
 const SignupScreen = () => {
   const router = useRouter();
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [isUsernameValid, setIsUsernameValid] = useState(true);
+
+  const handleUsernameValidation = () => {
+    setIsUsernameValid(validateUsername(username));
+  };
+
+  const handleEmailValidation = () => {
+    setIsEmailValid(isValidEmail(email));
+  };
+
+  const handlePasswordValidation = () => {
+    setIsPasswordValid(isValidPassword(password));
+  };
 
   const handleOnSignup = () => {
-    if (!username) {
-      sendToast("Please enter your username");
-    } else if (!email) {
-      sendToast("Please enter your email");
-    } else if (!password) {
-      sendToast("Please enter your password");
-    } else {
-      router.push("otp");
-    }
+    handleUsernameValidation();
+    handleEmailValidation();
+    handlePasswordValidation();
+
+    console.log(isEmailValid, isPasswordValid, isUsernameValid);
+    console.log("signing up");
+    //signUpEmail(email, password);
+    //router.push("otp");
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.black}}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}} bounces={false}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.black }}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+          bounces={false}
+        >
           <View style={GlobalStyle.container}>
             <StatusBar style="light" />
             <AuthToolbar />
-            
+
             <View style={styles.authBackground}>
               <Text style={styles.heading}>ApnaBudget</Text>
             </View>
 
             <View style={styles.signupFormWrapper}>
-              <Text style={styles.subHeading}>
-                Sign up your Account
-              </Text>
+              <Text style={styles.subHeading}>Sign up your Account</Text>
 
               <AuthInputBox
                 value={username}
                 setValue={setUsername}
                 iconName={"person-outline"}
                 inputPlaceholder={"Username"}
+                onBlurEffect={handleUsernameValidation}
               />
+              {(!isUsernameValid) && (
+                <View style={styles.warningContainer}>
+                  <Ionicons
+                    name={"warning"}
+                    style={styles.inputIcon}
+                    size={16}
+                    color={theme.colors.iconColor}
+                  />
+                  <Text style={styles.inputError}>
+                    Username must only contain letters, numbers and underscores.
+                  </Text>
+                </View>
+              )}
 
               <AuthInputBox
                 value={email}
                 setValue={setEmail}
                 iconName={"mail-outline"}
                 inputPlaceholder={"Email"}
+                onBlurEffect={handleEmailValidation}
               />
+
+              {!isEmailValid && (
+                <View style={styles.warningContainer}>
+                  <Ionicons
+                    name={"warning"}
+                    style={styles.inputIcon}
+                    size={16}
+                    color={theme.colors.iconColor}
+                  />
+                  <Text style={styles.inputError}>Invalid Email !</Text>
+                </View>
+              )}
 
               <AuthInputBox
                 value={password}
@@ -67,14 +126,34 @@ const SignupScreen = () => {
                 isPassword={true}
                 iconName={"lock-closed-outline"}
                 inputPlaceholder={"Password"}
+                onBlurEffect={handlePasswordValidation}
               />
 
-              <View style={styles.termConditionWrapper}>
-                <Text style={styles.termConditionText}>
-                  I agree to the{" "}
-                </Text>
+              {!isPasswordValid && (
+                <View style={styles.warningContainer}>
+                  <Ionicons
+                    name={"warning"}
+                    style={styles.inputIcon}
+                    size={16}
+                    color={theme.colors.iconColor}
+                  />
+                  <Text style={styles.inputError}>
+                    Password must be 6 characters with at least one letter,
+                    number, and special character.
+                  </Text>
+                </View>
+              )}
 
-                <Pressable onPress={() => Linking.openURL('https://apnabudget.com/terms-and-conditions')}>
+              <View style={styles.termConditionWrapper}>
+                <Text style={styles.termConditionText}>I agree to the </Text>
+
+                <Pressable
+                  onPress={() =>
+                    Linking.openURL(
+                      "https://apnabudget.com/terms-and-conditions"
+                    )
+                  }
+                >
                   <Text style={styles.termConditionLink}>
                     Terms and Conditions
                   </Text>
@@ -126,8 +205,8 @@ const styles = StyleSheet.create({
   authBackground: {
     position: "absolute",
     top: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     width: theme.width,
     height: hpToDP(28),
     backgroundColor: theme.colors.primaryColor,
@@ -136,8 +215,8 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    fontFamily: 'bold',
-    alignSelf:'center',
+    fontFamily: "bold",
+    alignSelf: "center",
     fontSize: wpToDP(11.5),
     color: theme.colors.white,
     marginTop: hpToDP(7),
@@ -146,11 +225,26 @@ const styles = StyleSheet.create({
   subHeading: {
     fontSize: wpToDP(5),
     color: theme.colors.black,
-    alignSelf:'center',
-    fontFamily: 'medium',
-    marginBottom: hpToDP(2),
+    alignSelf: "center",
+    fontFamily: "medium",
+    marginBottom: hpToDP(0),
   },
-
+  inputError: {
+    color: "darkred",
+    marginTop: 0,
+    fontSize: wpToDP(3.3),
+    marginTop: hpToDP(-1.25),
+    marginStart: wpToDP(1),
+  },
+  inputIcon: {
+    marginTop: hpToDP(-1.25),
+    marginStart: wpToDP(3),
+  },
+  warningContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginRight: wpToDP(5),
+  },
   signupFormWrapper: {
     width: "100%",
     gap: hpToDP(1.75),
@@ -159,21 +253,21 @@ const styles = StyleSheet.create({
 
   termConditionWrapper: {
     alignSelf: "flex-start",
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   termConditionText: {
     fontSize: wpToDP(3.5),
     color: theme.colors.black,
-    fontFamily: 'regular',
+    fontFamily: "regular",
   },
 
   termConditionLink: {
     color: theme.colors.primaryColor,
-    fontFamily: 'semibold',
-    fontSize: wpToDP(3.5)
+    fontFamily: "semibold",
+    fontSize: wpToDP(3.5),
   },
 
   signupButton: {
@@ -181,11 +275,11 @@ const styles = StyleSheet.create({
   },
 
   authSeparator: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: hpToDP(5),
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: hpToDP(2.5),
   },
 
   authSeparatorLine: {
@@ -196,8 +290,8 @@ const styles = StyleSheet.create({
 
   authSeparatorText: {
     width: wpToDP(10),
-    textAlign: 'center',
-    fontFamily: 'light',
+    textAlign: "center",
+    fontFamily: "light",
     color: theme.colors.lightblack,
   },
 

@@ -11,6 +11,7 @@ import GlobalStyle from "../constants/GlobalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { hpToDP, wpToDP } from "../utils/ResponsiveScreen";
 import { StatusBar } from "expo-status-bar";
+import { signInEmail } from "../utils/AuthHelper";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -22,9 +23,8 @@ const LoginScreen = () => {
       sendToast("Please enter your username");
     } else if (!password) {
       sendToast("Please enter your password");
-    } else if (username !== "admin" || password !== "admin@123") {
-      sendToast("Invalid username or password!");
     } else {
+      signInEmail(username, password);
       router.push("(tabs)")
     }
   };

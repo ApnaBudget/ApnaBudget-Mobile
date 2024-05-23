@@ -10,7 +10,9 @@ const AuthToolbar = ({ isDark, heading }) => {
   
   return (
     <View style={styles.appToolbarWrapper}>
-        <Pressable onPress={() => router.back()}>
+        <Pressable onPress={() => {
+            if(router.canGoBack()) router.back()
+          }}>
           <Ionicons name="arrow-back-outline" size={wpToDP(8)} color={isDark ? theme.colors.black : theme.colors.white} />
         </Pressable>
 

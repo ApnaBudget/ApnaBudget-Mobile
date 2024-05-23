@@ -1,63 +1,44 @@
-import {
-  View,
-  Text,
-  Image,
-  Pressable,
-  StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
-  Linking,
-} from "react-native";
+import { View, Text, Image, Pressable, StyleSheet, KeyboardAvoidingView, ScrollView, Linking } from "react-native";
 import { ImagesAssets } from "@/constants/ImageAssets";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { theme } from "@/constants/theme";
-import { useRouter } from "expo-router";
 import AuthInputBox from "@/components/Auth/AuthInputBox";
-import { Ionicons } from "@expo/vector-icons";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
 import Button from "@/components/common/Button";
 import GlobalStyle from "@/constants/GlobalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { wpToDP, hpToDP } from "@/utils/ResponsiveScreen";
 import { StatusBar } from "expo-status-bar";
-import { signUpEmail } from "../utils/AuthHelper";
-import {
-  isValidEmail,
-  debounce,
-  isValidPassword,
-  validateUsername,
-} from "../utils/BasicHelpers";
+import { signUpEmail } from "@/utils/AuthHelper";
+import { isValidEmail, isValidPassword, isValidUsername } from "@/utils/AuthValidator";
 
 const SignupScreen = () => {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isUsernameValid, setIsUsernameValid] = useState(true);
-
-  const handleUsernameValidation = () => {
-    setIsUsernameValid(validateUsername(username));
-  };
-
-  const handleEmailValidation = () => {
-    setIsEmailValid(isValidEmail(email));
-  };
-
-  const handlePasswordValidation = () => {
-    setIsPasswordValid(isValidPassword(password));
-  };
+  const [authError, setAuthError] = useState("Invalid email");
 
   const handleOnSignup = () => {
-    handleUsernameValidation();
-    handleEmailValidation();
-    handlePasswordValidation();
-
-    console.log(isEmailValid, isPasswordValid, isUsernameValid);
-    console.log("signing up");
-    //signUpEmail(email, password);
-    //router.push("otp");
+    if(!isValidUsername(username) && !isValidEmail(email) && !isValidPassword(password)) {
+      setIsUsernameValid(false);
+      setIsEmailValid(false);
+      setIsPasswordValid(false);
+      setAuthError("Invalid Email");
+    } else if(!isValidUsername(username)) {
+      setIsUsernameValid(false);
+    } else if(!isValidEmail(email)) {
+      setIsEmailValid(false);
+      setAuthError("Invalid Email");
+    } else if(!isValidPassword(password)) {
+      setIsPasswordValid(false);
+    } else {
+      setIsUsernameValid(true);
+      setIsPasswordValid(true);
+      signUpEmail(email, password, setIsEmailValid, setAuthError);
+    }
   };
 
   return (
@@ -84,41 +65,22 @@ const SignupScreen = () => {
                 setValue={setUsername}
                 iconName={"person-outline"}
                 inputPlaceholder={"Username"}
-                onBlurEffect={handleUsernameValidation}
+                setIsInputValid={setIsUsernameValid}
+                inputValidator={isValidUsername}
+                shouldErrored={!isUsernameValid}
+                error="Invalid username"
               />
-              {(!isUsernameValid) && (
-                <View style={styles.warningContainer}>
-                  <Ionicons
-                    name={"warning"}
-                    style={styles.inputIcon}
-                    size={16}
-                    color={theme.colors.iconColor}
-                  />
-                  <Text style={styles.inputError}>
-                    Username must only contain letters, numbers and underscores.
-                  </Text>
-                </View>
-              )}
 
               <AuthInputBox
                 value={email}
                 setValue={setEmail}
                 iconName={"mail-outline"}
                 inputPlaceholder={"Email"}
-                onBlurEffect={handleEmailValidation}
+                setIsInputValid={setIsEmailValid}
+                inputValidator={isValidEmail}
+                shouldErrored={!isEmailValid}
+                error={authError}
               />
-
-              {!isEmailValid && (
-                <View style={styles.warningContainer}>
-                  <Ionicons
-                    name={"warning"}
-                    style={styles.inputIcon}
-                    size={16}
-                    color={theme.colors.iconColor}
-                  />
-                  <Text style={styles.inputError}>Invalid Email !</Text>
-                </View>
-              )}
 
               <AuthInputBox
                 value={password}
@@ -126,23 +88,11 @@ const SignupScreen = () => {
                 isPassword={true}
                 iconName={"lock-closed-outline"}
                 inputPlaceholder={"Password"}
-                onBlurEffect={handlePasswordValidation}
+                setIsInputValid={setIsPasswordValid}
+                inputValidator={isValidPassword}
+                shouldErrored={!isPasswordValid}
+                error="Password must be 6 characters in length."
               />
-
-              {!isPasswordValid && (
-                <View style={styles.warningContainer}>
-                  <Ionicons
-                    name={"warning"}
-                    style={styles.inputIcon}
-                    size={16}
-                    color={theme.colors.iconColor}
-                  />
-                  <Text style={styles.inputError}>
-                    Password must be 6 characters with at least one letter,
-                    number, and special character.
-                  </Text>
-                </View>
-              )}
 
               <View style={styles.termConditionWrapper}>
                 <Text style={styles.termConditionText}>I agree to the </Text>
@@ -227,24 +177,9 @@ const styles = StyleSheet.create({
     color: theme.colors.black,
     alignSelf: "center",
     fontFamily: "medium",
-    marginBottom: hpToDP(0),
+    marginBottom: hpToDP(2),
   },
-  inputError: {
-    color: "darkred",
-    marginTop: 0,
-    fontSize: wpToDP(3.3),
-    marginTop: hpToDP(-1.25),
-    marginStart: wpToDP(1),
-  },
-  inputIcon: {
-    marginTop: hpToDP(-1.25),
-    marginStart: wpToDP(3),
-  },
-  warningContainer: {
-    display: "flex",
-    flexDirection: "row",
-    marginRight: wpToDP(5),
-  },
+
   signupFormWrapper: {
     width: "100%",
     gap: hpToDP(1.75),
@@ -279,7 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: hpToDP(2.5),
+    marginVertical: hpToDP(5),
   },
 
   authSeparatorLine: {

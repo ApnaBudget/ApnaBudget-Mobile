@@ -38,11 +38,7 @@ const RootLayoutNav = () => {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="login" options={{animationTypeForReplace: 'push', animation:'ios'}} />
-      <Stack.Screen name="forgetPassword" options={{animationTypeForReplace: 'push', animation:'fade'}} />
-      <Stack.Screen name="confirmPassword" options={{animationTypeForReplace: 'push', animation:'fade'}} />
       <Stack.Screen name="signup" options={{animationTypeForReplace: 'push', animation:'ios'}} />
-      <Stack.Screen name="otp" options={{animationTypeForReplace: 'push', animation:'fade'}} />
-      <Stack.Screen name="verified" options={{animationTypeForReplace: 'push', animation:'fade'}} />
       <Stack.Screen name="(tabs)" options={{animationTypeForReplace: 'push', animation:'fade'}} />
     </Stack>
   );

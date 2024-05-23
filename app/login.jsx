@@ -2,35 +2,39 @@ import { View, Text, Image, Pressable, StyleSheet, ScrollView, KeyboardAvoidingV
 import { ImagesAssets } from "@/constants/ImageAssets";
 import React, { useState } from "react";
 import { theme } from "@/constants/theme";
-import { useRouter } from "expo-router";
 import AuthInputBox from "@/components/Auth/AuthInputBox";
 import AuthToolbar from "@/components/Auth/AuthToolbar";
 import Button from "@/components/common/Button";
-import { sendToast } from "@/utils/SendToast";
-import GlobalStyle from "../constants/GlobalStyle";
+import GlobalStyle from "@/constants/GlobalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { hpToDP, wpToDP } from "../utils/ResponsiveScreen";
+import { hpToDP, wpToDP } from "@/utils/ResponsiveScreen";
 import { StatusBar } from "expo-status-bar";
+import { signInEmail } from "@/utils/AuthHelper";
+import { isValidEmail, isValidPassword } from "@/utils/AuthValidator";
 
 const LoginScreen = () => {
-  const router = useRouter();
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [authError, setAuthError] = useState("Invalid email");
 
   const handleOnLoginin = () => {
-    if (!username) {
-      sendToast("Please enter your username");
-    } else if (!password) {
-      sendToast("Please enter your password");
-    } else if (username !== "admin" || password !== "admin@123") {
-      sendToast("Invalid username or password!");
+    if(!isValidEmail(email) && !isValidPassword(password)) {
+      setIsEmailValid(false);
+      setIsPasswordValid(false);
+    } else if(!isValidEmail(email)) {
+      setIsEmailValid(false);
+    } else if(!isValidPassword(password)) {
+      setIsPasswordValid(false);
     } else {
-      router.push("(tabs)")
+      setIsEmailValid(true);
+      setIsPasswordValid(true);
+      signInEmail(email, password, setIsEmailValid, setIsPasswordValid, setAuthError, "(tabs)");
     }
   };
 
   const handleOnForgetPassword = () => {
-    router.push("forgetPassword");
   };
 
 
@@ -52,10 +56,14 @@ const LoginScreen = () => {
               </Text>
 
               <AuthInputBox
-                value={username}
-                setValue={setUsername}
-                iconName={"mail-outline"}
-                inputPlaceholder={"Email or Phone number"}
+                value={email}
+                setValue={setEmail}
+                iconName={"person-outline"}
+                inputPlaceholder={"Email"}
+                setIsInputValid={setIsEmailValid}
+                inputValidator={isValidEmail}
+                shouldErrored={!isEmailValid}
+                error={authError}
               />
 
               <AuthInputBox
@@ -64,6 +72,10 @@ const LoginScreen = () => {
                 isPassword={true}
                 iconName={"lock-closed-outline"}
                 inputPlaceholder={"Password"}
+                setIsInputValid={setIsPasswordValid}
+                inputValidator={isValidPassword}
+                shouldErrored={!isPasswordValid}
+                error={authError !== "Invalid email" ? authError : "Password must be 6 characters in length."}
               />
 
               <Pressable onPress={handleOnForgetPassword} style={styles.forgotPasswordWrapper}>

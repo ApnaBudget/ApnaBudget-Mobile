@@ -11,6 +11,7 @@ import { wpToDP, hpToDP } from "@/utils/ResponsiveScreen";
 import { StatusBar } from "expo-status-bar";
 import { signUpEmail } from "@/utils/AuthHelper";
 import { isValidEmail, isValidPassword, isValidUsername } from "@/utils/AuthValidator";
+import { Ionicons } from "@expo/vector-icons";
 
 const SignupScreen = () => {
   const [username, setUsername] = useState("");
@@ -19,25 +20,23 @@ const SignupScreen = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isUsernameValid, setIsUsernameValid] = useState(true);
-  const [authError, setAuthError] = useState("Invalid email");
+  const [authError, setAuthError] = useState("");
 
   const handleOnSignup = () => {
     if(!isValidUsername(username) && !isValidEmail(email) && !isValidPassword(password)) {
       setIsUsernameValid(false);
       setIsEmailValid(false);
       setIsPasswordValid(false);
-      setAuthError("Invalid Email");
     } else if(!isValidUsername(username)) {
       setIsUsernameValid(false);
     } else if(!isValidEmail(email)) {
       setIsEmailValid(false);
-      setAuthError("Invalid Email");
     } else if(!isValidPassword(password)) {
       setIsPasswordValid(false);
     } else {
       setIsUsernameValid(true);
       setIsPasswordValid(true);
-      signUpEmail(email, password, setIsEmailValid, setAuthError);
+      signUpEmail(email, password, setAuthError);
     }
   };
 
@@ -79,7 +78,7 @@ const SignupScreen = () => {
                 setIsInputValid={setIsEmailValid}
                 inputValidator={isValidEmail}
                 shouldErrored={!isEmailValid}
-                error={authError}
+                error="Invalid email"
               />
 
               <AuthInputBox
@@ -116,6 +115,18 @@ const SignupScreen = () => {
               customButtonStyle={styles.signupButton}
               placeholder={"Sign up"}
             />
+
+            {
+              authError && <View style={styles.warningContainer}>
+                  <Ionicons
+                  name={"warning"}
+                  style={styles.inputErrorIcon}
+                  size={16}
+                  color={theme.colors.iconColor}
+                  />
+                  <Text style={styles.inputError}>{authError}</Text>
+              </View>
+            }
 
             <View style={styles.authSeparator}>
               <View style={styles.authSeparatorLine} />
@@ -207,6 +218,26 @@ const styles = StyleSheet.create({
 
   signupButton: {
     marginTop: hpToDP(2.5),
+  },
+  
+  warningContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginRight: wpToDP(5),
+    marginTop: hpToDP(2.5),
+  },
+
+  inputErrorIcon: {
+    marginTop: hpToDP(-1),
+    marginStart: wpToDP(1),
+  },
+
+  inputError: {
+      color: "darkred",
+      marginTop: 0,
+      fontSize: wpToDP(3.3),
+      marginTop: hpToDP(-1),
+      marginStart: wpToDP(1),
   },
 
   authSeparator: {

@@ -4,54 +4,85 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { sendToast } from "./SendToast";
 
 const auth = getAuth();
 
-export const signUpEmail = async (email, password, setIsEmailValid, setAuthError) => {
+export const isAlreadyLoggedIn = async (setIsLoggedIn, nextRoute) => {
+  await auth.onAuthStateChanged((user) => {
+    if(user) {
+      setIsLoggedIn(true);
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+  
+      router.replace(nextRoute);
+
+    } else {
+      setIsLoggedIn(false);
+    }
+  })
+}
+
+export const signUpEmail = async (email, password, setAuthError) => {
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       setAuthError("");
-      setIsEmailValid(true);
 
       sendEmailVerification(userCredential.user).then(() => {
         sendToast("Please check your email for a verification link");
+        setAuthError("");
       }).catch((error) => {
-        console.log(error);
+        setAuthError.log(error.code);
       });
     })
     .catch((error) => {
-      console.log(error);
-      setIsEmailValid(false);
       if(error.code === "auth/email-already-in-use") {
         setAuthError("That email address is already in use!");
       } else if(error.code === "auth/invalid-email") {
         setAuthError("That email address is invalid!");
       } else {
-        setAuthError(error.message);
+        setAuthError(error.code);
       }
     });
 };
 
-export const signInEmail = async (email, password, setIsEmailValid, setIsPasswordValid, setAuthError, nextRoute) => {
+export const signInEmail = async (email, password, setAuthError, nextRoute) => {
   await signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      setIsEmailValid(true);
-      setIsPasswordValid(true);
-      router.dismissAll();
-      router.replace(nextRoute);
+    .then((userCredential) => {
+      if(userCredential.user.emailVerified) {
+        setAuthError("");
+        router.dismissAll();
+        router.replace(nextRoute);
+      } else {
+        auth.signOut();
+        setAuthError("Your email is not verified!");
+      }
     })
     .catch((error) => {
-      console.log(error);
-      setIsEmailValid(false);
-      setIsPasswordValid(false);
-      
       if(error.code === "auth/invalid-credential") setAuthError("Invalid Credential");
-      setAuthError(error.code);
+      else setAuthError(error.code);
     });
 };
+
+export const sendForgetPasswordLink = async (email, setIsEmailValid, setAuthError) => {
+  sendPasswordResetEmail(auth, email).then(() => {
+    setAuthError("");
+    setIsEmailValid(true);
+    sendToast("Check your email for password reset link!");
+  }).catch((error) => {
+    if(error.code === "auth/invalid-email") {
+      setIsEmailValid(false);
+      setAuthError("That email address is invalid!");
+    } else {
+      setIsEmailValid(true);
+      setAuthError(error.code);
+    }
+  });
+}
 
 export const logout = async (nextRoute) => {
   await auth.signOut();

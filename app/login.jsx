@@ -11,13 +11,15 @@ import { hpToDP, wpToDP } from "@/utils/ResponsiveScreen";
 import { StatusBar } from "expo-status-bar";
 import { signInEmail } from "@/utils/AuthHelper";
 import { isValidEmail, isValidPassword } from "@/utils/AuthValidator";
+import { Ionicons } from "@expo/vector-icons";
+import { sendForgetPasswordLink } from "../utils/AuthHelper";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [authError, setAuthError] = useState("Invalid email");
+  const [authError, setAuthError] = useState("");
 
   const handleOnLoginin = () => {
     if(!isValidEmail(email) && !isValidPassword(password)) {
@@ -30,11 +32,17 @@ const LoginScreen = () => {
     } else {
       setIsEmailValid(true);
       setIsPasswordValid(true);
-      signInEmail(email, password, setIsEmailValid, setIsPasswordValid, setAuthError, "(tabs)");
+      signInEmail(email, password, setAuthError, "(tabs)");
     }
   };
 
   const handleOnForgetPassword = () => {
+    if(!isValidEmail(email)) {
+      setIsEmailValid(false);
+      setAuthError("Please enter a valid email!");
+    } else {
+      sendForgetPasswordLink(email, setIsEmailValid, setAuthError);
+    }
   };
 
 
@@ -63,7 +71,7 @@ const LoginScreen = () => {
                 setIsInputValid={setIsEmailValid}
                 inputValidator={isValidEmail}
                 shouldErrored={!isEmailValid}
-                error={authError}
+                error="Invalid email"
               />
 
               <AuthInputBox
@@ -75,7 +83,7 @@ const LoginScreen = () => {
                 setIsInputValid={setIsPasswordValid}
                 inputValidator={isValidPassword}
                 shouldErrored={!isPasswordValid}
-                error={authError !== "Invalid email" ? authError : "Password must be 6 characters in length."}
+                error="Password must be 6 characters in length."
               />
 
               <Pressable onPress={handleOnForgetPassword} style={styles.forgotPasswordWrapper}>
@@ -90,6 +98,18 @@ const LoginScreen = () => {
               customButtonStyle={styles.loginButton}
               placeholder={"Login"}
             />
+
+            {
+              authError && <View style={styles.warningContainer}>
+                  <Ionicons
+                  name={"warning"}
+                  style={styles.inputErrorIcon}
+                  size={16}
+                  color={theme.colors.iconColor}
+                  />
+                  <Text style={styles.inputError}>{authError}</Text>
+              </View>
+            }
 
             <View style={styles.authSeparator}>
               <View style={styles.authSeparatorLine} />
@@ -172,6 +192,26 @@ const styles = StyleSheet.create({
 
   loginButton: {
     marginTop: hpToDP(2.5),
+  },
+  
+  warningContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginRight: wpToDP(5),
+    marginTop: hpToDP(2.5),
+  },
+
+  inputErrorIcon: {
+    marginTop: hpToDP(-1),
+    marginStart: wpToDP(1),
+  },
+
+  inputError: {
+      color: "darkred",
+      marginTop: 0,
+      fontSize: wpToDP(3.3),
+      marginTop: hpToDP(-1),
+      marginStart: wpToDP(1),
   },
 
   authSeparator: {

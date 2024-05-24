@@ -7,7 +7,7 @@ import { logout } from '../../utils/AuthHelper'
 const settings = () => {
 
   const onLogout = () => {
-    logout("login");
+    logout("/");
   }
 
   return (

@@ -1,4 +1,13 @@
-import { View, Text, Image, Pressable, StyleSheet, KeyboardAvoidingView, ScrollView, Linking } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Linking,
+} from "react-native";
 import { ImagesAssets } from "@/constants/ImageAssets";
 import React, { useState } from "react";
 import { theme } from "@/constants/theme";
@@ -10,7 +19,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { wpToDP, hpToDP } from "@/utils/ResponsiveScreen";
 import { StatusBar } from "expo-status-bar";
 import { signUpEmail } from "@/utils/AuthHelper";
-import { isValidEmail, isValidPassword, isValidUsername } from "@/utils/AuthValidator";
+import {
+  isValidEmail,
+  isValidPassword,
+  isValidUsername,
+} from "@/utils/AuthValidator";
+import { signIn } from "@/utils/googleSignIn";
 
 const SignupScreen = () => {
   const [username, setUsername] = useState("");
@@ -22,17 +36,21 @@ const SignupScreen = () => {
   const [authError, setAuthError] = useState("Invalid email");
 
   const handleOnSignup = () => {
-    if(!isValidUsername(username) && !isValidEmail(email) && !isValidPassword(password)) {
+    if (
+      !isValidUsername(username) &&
+      !isValidEmail(email) &&
+      !isValidPassword(password)
+    ) {
       setIsUsernameValid(false);
       setIsEmailValid(false);
       setIsPasswordValid(false);
       setAuthError("Invalid Email");
-    } else if(!isValidUsername(username)) {
+    } else if (!isValidUsername(username)) {
       setIsUsernameValid(false);
-    } else if(!isValidEmail(email)) {
+    } else if (!isValidEmail(email)) {
       setIsEmailValid(false);
       setAuthError("Invalid Email");
-    } else if(!isValidPassword(password)) {
+    } else if (!isValidPassword(password)) {
       setIsPasswordValid(false);
     } else {
       setIsUsernameValid(true);
@@ -126,7 +144,10 @@ const SignupScreen = () => {
             </View>
 
             <View style={styles.authButtonsContainer}>
-              <Pressable style={[styles.authButton, styles.googleAuthButton]}>
+              <Pressable
+                style={[styles.authButton, styles.googleAuthButton]}
+                onPress={signIn}
+              >
                 <Image
                   resizeMode="contain"
                   source={ImagesAssets.googleLogo}

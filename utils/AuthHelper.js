@@ -1,4 +1,4 @@
-import FIREBASE_APP, { FIREBASE_AUTH } from "../config";
+import FIREBASE_APP, { FIREBASE_AUTH } from "@/firebase-config";
 import { router } from "expo-router";
 import {
   createUserWithEmailAndPassword,
@@ -13,7 +13,7 @@ const auth = getAuth();
 
 export const isAlreadyLoggedIn = async (setIsLoggedIn, nextRoute) => {
   await auth.onAuthStateChanged((user) => {
-    if(user) {
+    if(user && user.emailVerified) {
       setIsLoggedIn(true);
       if (router.canDismiss()) {
         router.dismissAll();
@@ -30,9 +30,8 @@ export const isAlreadyLoggedIn = async (setIsLoggedIn, nextRoute) => {
 export const signUpEmail = async (email, password, setAuthError) => {
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      setAuthError("");
-
-      sendEmailVerification(userCredential.user).then(() => {
+      sendEmailVerification(userCredential.user)
+      .then(() => {
         sendToast("Please check your email for a verification link");
         setAuthError("");
       }).catch((error) => {
@@ -55,7 +54,9 @@ export const signInEmail = async (email, password, setAuthError, nextRoute) => {
     .then((userCredential) => {
       if(userCredential.user.emailVerified) {
         setAuthError("");
-        router.dismissAll();
+        if(router.canDismiss()) {
+          router.dismissAll();
+        }
         router.replace(nextRoute);
       } else {
         auth.signOut();

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GlobalStyle from "@/constants/GlobalStyle";
 import Button from "@/components/common/Button";
@@ -8,9 +8,16 @@ import { createRgba, theme } from "@/constants/theme";
 import { wpToDP } from "@/utils/ResponsiveScreen";
 import { hpToDP } from "../utils/ResponsiveScreen";
 import WelcomeBackground from "../assets/images/WelcomeBackground";
+import { isAlreadyLoggedIn } from "../utils/AuthHelper";
 
 const WelcomeScreen = ({ onLayout }) => {
-  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  
+  useEffect(() => {
+    isAlreadyLoggedIn(setIsLoggedIn, "(tabs)");
+  }, []);
+  
+  if(isLoggedIn === null) return null;
 
   return (
     <SafeAreaView onLayout={onLayout} style={[GlobalStyle.container, styles.container]}>

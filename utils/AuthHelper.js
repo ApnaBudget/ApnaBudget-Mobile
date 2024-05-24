@@ -11,6 +11,22 @@ import { sendToast } from "./SendToast";
 
 const auth = getAuth();
 
+export const isAlreadyLoggedIn = async (setIsLoggedIn, nextRoute) => {
+  await auth.onAuthStateChanged((user) => {
+    if(user) {
+      setIsLoggedIn(true);
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+  
+      router.replace(nextRoute);
+
+    } else {
+      setIsLoggedIn(false);
+    }
+  })
+}
+
 export const signUpEmail = async (email, password, setAuthError) => {
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
